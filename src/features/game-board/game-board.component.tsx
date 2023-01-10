@@ -130,8 +130,8 @@ const GameBoard = () => {
     <>
       <div className={styles.info}>
         <span> Your Score: {currentScore}</span>
-        <span> Highest Score: {highestScore}</span>
         {isGameOver && <button onClick={handlePlayAgain}> Play again</button>}
+        <span> Highest Score: {highestScore}</span>
       </div>
       <div className={styles.board}>
         {BOARD.map((row, rIndex) => (

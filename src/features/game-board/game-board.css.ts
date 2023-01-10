@@ -15,14 +15,14 @@ export const row = style({
 });
 
 export const cell = style({
-  width: vars.space.lg,
-  height: vars.space.lg,
+  width: vars.space.md,
+  height: vars.space.md,
   backgroundColor: vars.colors.background,
 });
 
 export const snake = style({
-  width: vars.space.lg,
-  height: vars.space.lg,
+  width: vars.space.md,
+  height: vars.space.md,
   backgroundColor: vars.colors.blue700,
 });
 
@@ -31,13 +31,16 @@ export const snakeHead = style({
 });
 
 export const food = style({
-  width: vars.space.lg,
-  height: vars.space.lg,
+  width: vars.space.md,
+  height: vars.space.md,
   backgroundColor: vars.colors.green400,
 });
 
 export const info = style({
   display: "flex",
   gap: vars.space.xl,
+  alignItems: "center",
+  justifyContent: "center",
   boxShadow: vars.boxShadow.md,
+  padding: vars.space.md,
 });
