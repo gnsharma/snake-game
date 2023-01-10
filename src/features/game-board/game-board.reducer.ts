@@ -1,11 +1,11 @@
-import { TOTAL_COLUMNS, TOTAL_ROWS } from "./game-board.constants";
+import { TOTAL_COLUMNS, TOTAL_ROWS, FOOD_EMOJIS } from "./game-board.constants";
 
 const initialSnakeCoordinates: Snake = [
-  { x: 10, y: 10 },
-  { x: 10, y: 11 },
-  { x: 10, y: 12 },
-  { x: 10, y: 13 },
-  { x: 10, y: 14 },
+  { x: 4, y: 7 },
+  { x: 4, y: 6 },
+  { x: 4, y: 5 },
+  { x: 4, y: 4 },
+  { x: 4, y: 3 },
 ];
 
 const getNewSnakeHead = (snake: Snake, direction: Direction) => {
@@ -42,12 +42,13 @@ const increaseSnakeLength = (snake: Snake, direction: Direction) => {
 
 export const initialBoardState: BoardState = {
   snake: initialSnakeCoordinates,
-  direction: "right",
+  direction: "down",
   foodCoordinates: { x: null, y: null },
   hasFoodBeenCollected: false,
   currentScore: 0,
   elapsedTime: 0,
   isGameOver: false,
+  foodEmoji: null,
 };
 
 export const gameReducer = (state: BoardState, action: GAME_ACTIONS) => {
@@ -81,6 +82,7 @@ export const gameReducer = (state: BoardState, action: GAME_ACTIONS) => {
           y: Math.floor(Math.random() * TOTAL_ROWS),
         },
         hasFoodBeenCollected: false,
+        foodEmoji: FOOD_EMOJIS[Math.floor(Math.random() * FOOD_EMOJIS.length)],
       };
     }
 
@@ -94,6 +96,7 @@ export const gameReducer = (state: BoardState, action: GAME_ACTIONS) => {
         snake: increaseSnakeLength(state.snake, state.direction),
         hasFoodBeenCollected: true,
         foodCoordinates: { x: null, y: null },
+        foodEmoji: null,
         elapsedTime: 0,
         currentScore: state.currentScore + 50 - state.elapsedTime,
       };

@@ -19,6 +19,7 @@ function App() {
         styles.app
       )}
     >
+      <span> Swipe or use arrow keys to change direction.</span>
       <GameBoard />
       <div className={styles.footer}>
         <a href="https://github.com/gnsharma/snake-game" target="_blank">

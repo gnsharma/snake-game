@@ -15,10 +15,8 @@ import * as styles from "./game-board.css";
 // TODO: detect body collision
 // TODO: block direction change which results in body collision
 // TODO: link preview generation
-const V_THRESHOLD = 0.3;
-
 const GameBoard = () => {
-  const [highestScore, setHighestScore] = useLocalStorage<null | number>(
+  const [_, setHighestScore] = useLocalStorage<null | number>(
     "highestScore",
     null
   );
@@ -59,6 +57,7 @@ const GameBoard = () => {
       currentScore,
       elapsedTime,
       isGameOver,
+      foodEmoji,
     },
     dispatch,
   ] = useReducerWithSideEffects(
@@ -122,9 +121,11 @@ const GameBoard = () => {
     { swipe: { duration: 1000, distance: [0, 0], velocity: [0, 0] } }
   );
 
+  const snakeIntervalDuration =
+    currentScore < 50 ? 500 : Math.max(150, 500 / (currentScore / 50));
   const snakeInterval = useInterval(() => {
     dispatch({ type: "SNAKE_INTERVAL_TICKED" });
-  }, 1000);
+  }, snakeIntervalDuration);
   const foodInterval = useInterval(() => {
     dispatch({ type: "GENERATE_FOOD" });
   }, 3000);
@@ -137,7 +138,7 @@ const GameBoard = () => {
 
   React.useEffect(() => {
     if (!isGameOver) {
-      snakeInterval.set();
+      // snakeInterval.set();
       foodInterval.set();
       timeInterval.set();
     }
@@ -183,13 +184,8 @@ const GameBoard = () => {
 
   return (
     <>
-      <HeaderRow
-        currentScore={currentScore}
-        highestScore={highestScore}
-        isGameOver={isGameOver}
-        onPlayAgainClick={onPlayAgainClick}
-      />
-      <div className={styles.board} {...bind()} style={{ touchAction: "none" }}>
+      <HeaderRow currentScore={currentScore} />
+      <div className={styles.board} {...bind()}>
         {BOARD.map((row, rIndex) => (
           <div className={styles.row} key={rIndex}>
             {row.map((col, cIndex) => (
@@ -199,7 +195,7 @@ const GameBoard = () => {
                     return (
                       <div
                         className={clsx(
-                          styles.snake,
+                          index !== 0 && styles.snake,
                           index === 0 && styles.snakeHead
                         )}
                         key={index}
@@ -209,13 +205,18 @@ const GameBoard = () => {
                 })}
                 {foodCoordinates.x === cIndex &&
                 foodCoordinates.y === rIndex ? (
-                  <div className={styles.food} />
+                  <div className={styles.food}>{foodEmoji}</div>
                 ) : null}
               </div>
             ))}
           </div>
         ))}
       </div>
+      {isGameOver && (
+        <button onClick={onPlayAgainClick} className={styles.playAgain}>
+          Play Again
+        </button>
+      )}
     </>
   );
 };

@@ -11,6 +11,7 @@ export const app = style({
   backgroundColor: vars.colors.background,
   width: "100%",
   height: "100%",
+  color: vars.colors.primary,
 });
 
 export const footer = style({

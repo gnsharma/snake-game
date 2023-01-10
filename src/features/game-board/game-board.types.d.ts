@@ -12,6 +12,7 @@ type BoardState = {
   snake: Snake;
   direction: Direction;
   isGameOver: boolean;
+  foodEmoji: string | null;
 };
 type GAME_ACTIONS =
   | {

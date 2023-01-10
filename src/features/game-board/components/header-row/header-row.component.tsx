@@ -1,4 +1,4 @@
-import { useDarkMode } from "usehooks-ts";
+import { useDarkMode, useReadLocalStorage } from "usehooks-ts";
 
 import * as styles from "./header-row.css";
 
@@ -7,19 +7,11 @@ import MoonIcon from "src/assets/icons/moon.svg";
 
 type HeaderRowProps = {
   currentScore: number;
-  highestScore: null | number;
-  isGameOver: boolean;
-  onPlayAgainClick: () => void;
 };
 
-const HeaderRow = ({
-  currentScore,
-  highestScore,
-  isGameOver,
-  onPlayAgainClick,
-}: HeaderRowProps): JSX.Element => {
+const HeaderRow = ({ currentScore }: HeaderRowProps): JSX.Element => {
   const { isDarkMode, toggle } = useDarkMode();
-
+  const highestScore = useReadLocalStorage<null | number>("highestScore");
   return (
     <>
       <div className={styles.info}>
@@ -34,17 +26,14 @@ const HeaderRow = ({
             <span className={styles.infoValue}>{currentScore}</span>
           </div>
 
-          <div className={styles.scoreWrapper}>
-            <span className={styles.infoTitle}> Highest Score: </span>
-            <span className={styles.infoValue}>{highestScore}</span>
-          </div>
+          {highestScore && (
+            <div className={styles.scoreWrapper}>
+              <span className={styles.infoTitle}> Highest Score: </span>
+              <span className={styles.infoValue}>{highestScore}</span>
+            </div>
+          )}
         </div>
       </div>
-      {isGameOver && (
-        <button onClick={onPlayAgainClick} className={styles.playAgain}>
-          Play Again
-        </button>
-      )}
     </>
   );
 };
