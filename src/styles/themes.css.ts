@@ -129,7 +129,7 @@ const commonVars = {
 
 export const lightThemeClass = createTheme(vars, {
   colors: {
-    primary: colors.blue500,
+    primary: colors.blue600,
     body: colors.gray700,
     background: colors.gray100,
     link: colors.blue800,
@@ -142,7 +142,7 @@ export const lightThemeClass = createTheme(vars, {
 
 export const darkThemeClass = createTheme(vars, {
   colors: {
-    primary: colors.blue400,
+    primary: colors.blue100,
     body: colors.gray300,
     background: colors.gray800,
     link: colors.blue200,

@@ -8,11 +8,9 @@ import * as styles from "./app.css";
 import LinkedinLogo from "src/assets/logos/linkedin.png";
 import GithubLogo from "src/assets/logos/github.svg";
 import GithubLogoWhite from "src/assets/logos/github-white.svg";
-import SunIcon from "src/assets/icons/sun.svg";
-import MoonIcon from "src/assets/icons/moon.svg";
 
 function App() {
-  const { isDarkMode, toggle } = useDarkMode();
+  const { isDarkMode } = useDarkMode();
 
   return (
     <div
@@ -21,19 +19,18 @@ function App() {
         styles.app
       )}
     >
-      <div className={styles.header}>
-        <a href="https://www.linkedin.com/in/gnsharma0810/" target="_blank">
-          <img src={LinkedinLogo} className={styles.logo} />
-        </a>
+      <GameBoard />
+      <div className={styles.footer}>
         <a href="https://github.com/gnsharma/snake-game" target="_blank">
           <img
-            src={isDarkMode ? GithubLogo : GithubLogoWhite}
+            src={isDarkMode ? GithubLogoWhite : GithubLogo}
             className={styles.logo}
           />
         </a>
-        <img src={isDarkMode ? MoonIcon : SunIcon} onClick={toggle} />
+        <a href="https://www.linkedin.com/in/gnsharma0810/" target="_blank">
+          <img src={LinkedinLogo} className={styles.logo} />
+        </a>
       </div>
-      <GameBoard />
     </div>
   );
 }

@@ -8,6 +8,8 @@ export const board = style({
   gridAutoFlow: "column",
   boxShadow: vars.boxShadow.md,
   width: "min-content",
+  backgroundColor: vars.colors.primary,
+  borderRadius: vars.radii.sm,
 });
 
 export const row = style({
@@ -17,30 +19,20 @@ export const row = style({
 export const cell = style({
   width: vars.space.md,
   height: vars.space.md,
-  backgroundColor: vars.colors.background,
 });
 
 export const snake = style({
   width: vars.space.md,
   height: vars.space.md,
-  backgroundColor: vars.colors.blue700,
+  backgroundColor: vars.colors.red700,
 });
 
 export const snakeHead = style({
-  backgroundColor: vars.colors.blue600,
+  backgroundColor: vars.colors.red600,
 });
 
 export const food = style({
   width: vars.space.md,
   height: vars.space.md,
   backgroundColor: vars.colors.green400,
-});
-
-export const info = style({
-  display: "flex",
-  gap: vars.space.xl,
-  alignItems: "center",
-  justifyContent: "center",
-  boxShadow: vars.boxShadow.md,
-  padding: vars.space.md,
 });

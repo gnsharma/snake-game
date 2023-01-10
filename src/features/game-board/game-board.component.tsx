@@ -1,19 +1,21 @@
 import * as React from "react";
 import clsx from "clsx";
 import { useLocalStorage } from "usehooks-ts";
+import { useDrag } from "@use-gesture/react";
 
-import { useInterval, useReducerWithSideEffects } from "../../common/hooks";
+import { useInterval, useReducerWithSideEffects } from "src/common/hooks";
 
 import { TOTAL_COLUMNS, TOTAL_ROWS, BOARD } from "./game-board.constants";
 import { gameReducer, initialBoardState } from "./game-board.reducer";
+
+import HeaderRow from "./components/header-row";
 
 import * as styles from "./game-board.css";
 
 // TODO: detect body collision
 // TODO: block direction change which results in body collision
-// TODO: css improvements
-// TODO: responsiveness
 // TODO: link preview generation
+const V_THRESHOLD = 0.3;
 
 const GameBoard = () => {
   const [highestScore, setHighestScore] = useLocalStorage<null | number>(
@@ -65,9 +67,64 @@ const GameBoard = () => {
     initialBoardState
   );
 
+  const bind = useDrag(
+    ({ last, swipe: [swipeX, swipeY], offset: [offsetX, offsetY] }) => {
+      if (last) {
+        console.log(swipeX, swipeY, last, offsetX, offsetY);
+        let swipeDirection: Direction | null = null;
+        const largetOffset = Math.abs(offsetX) >= Math.abs(offsetY) ? "x" : "y";
+
+        if (swipeX === 1) {
+          if (swipeY === 0) {
+            swipeDirection = "right";
+          } else if (swipeY === 1) {
+            swipeDirection = largetOffset === "x" ? "right" : "down";
+          } else if (swipeY === -1) {
+            swipeDirection = largetOffset === "x" ? "right" : "up";
+          }
+        } else if (swipeX === -1) {
+          if (swipeY === 0) {
+            swipeDirection = "left";
+          } else if (swipeY === 1) {
+            swipeDirection = largetOffset === "x" ? "left" : "down";
+          } else if (swipeY === -1) {
+            swipeDirection = largetOffset === "x" ? "left" : "up";
+          }
+        } else if (swipeX === 0) {
+          if (swipeY === 1) {
+            swipeDirection = "down";
+          } else if (swipeY === -1) swipeDirection = "up";
+        }
+
+        if (swipeDirection === "left") {
+          dispatch({
+            type: "ARROW_LEFT_KEY_PRESSED",
+            payload: { direction: "left" },
+          });
+        } else if (swipeDirection === "up") {
+          dispatch({
+            type: "ARROW_UP_KEY_PRESSED",
+            payload: { direction: "up" },
+          });
+        } else if (swipeDirection === "right") {
+          dispatch({
+            type: "ARROW_RIGHT_KEY_PRESSED",
+            payload: { direction: "right" },
+          });
+        } else if (swipeDirection === "down") {
+          dispatch({
+            type: "ARROW_DOWN_KEY_PRESSED",
+            payload: { direction: "down" },
+          });
+        }
+      }
+    },
+    { swipe: { duration: 1000, distance: [0, 0], velocity: [0, 0] } }
+  );
+
   const snakeInterval = useInterval(() => {
     dispatch({ type: "SNAKE_INTERVAL_TICKED" });
-  }, 500);
+  }, 1000);
   const foodInterval = useInterval(() => {
     dispatch({ type: "GENERATE_FOOD" });
   }, 3000);
@@ -93,7 +150,6 @@ const GameBoard = () => {
 
   React.useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
-      snakeInterval.clear();
       if (event.code === "ArrowLeft") {
         dispatch({
           type: "ARROW_LEFT_KEY_PRESSED",
@@ -115,25 +171,25 @@ const GameBoard = () => {
           payload: { direction: "down" },
         });
       }
-      !isGameOver && snakeInterval.set();
     };
 
     document.addEventListener("keydown", handleKeyPress);
     return () => document.removeEventListener("keydown", handleKeyPress);
   }, [snake]);
 
-  const handlePlayAgain = () => {
+  const onPlayAgainClick = () => {
     dispatch({ type: "RESET_BOARD" });
   };
 
   return (
     <>
-      <div className={styles.info}>
-        <span> Your Score: {currentScore}</span>
-        {isGameOver && <button onClick={handlePlayAgain}> Play again</button>}
-        <span> Highest Score: {highestScore}</span>
-      </div>
-      <div className={styles.board}>
+      <HeaderRow
+        currentScore={currentScore}
+        highestScore={highestScore}
+        isGameOver={isGameOver}
+        onPlayAgainClick={onPlayAgainClick}
+      />
+      <div className={styles.board} {...bind()} style={{ touchAction: "none" }}>
         {BOARD.map((row, rIndex) => (
           <div className={styles.row} key={rIndex}>
             {row.map((col, cIndex) => (

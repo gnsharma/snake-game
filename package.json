@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@use-gesture/react": "^10.2.23",
     "@vanilla-extract/css": "^1.9.2",
     "clsx": "^1.2.1",
     "react": "^18.2.0",
