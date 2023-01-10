@@ -138,7 +138,7 @@ const GameBoard = () => {
 
   React.useEffect(() => {
     if (!isGameOver) {
-      // snakeInterval.set();
+      snakeInterval.set();
       foodInterval.set();
       timeInterval.set();
     }
