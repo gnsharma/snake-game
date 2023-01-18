@@ -22,21 +22,44 @@ const getNewSnakeHead = (snake: Snake, direction: Direction) => {
   return head;
 };
 
-// TODO: add logic here to avoid wall collision
 const increaseSnakeLength = (snake: Snake, direction: Direction) => {
   const snakeCopy = [...snake];
-  const head = { ...snakeCopy[0] };
   const tail = { ...snakeCopy[snakeCopy.length - 1] };
+
   if (direction === "right") {
-    head.x += 1;
+    if (tail.x !== 0) {
+      tail.x -= 1;
+    } else if (tail.y === 0) {
+      tail.y += 1;
+    } else {
+      tail.y -= 1;
+    }
   } else if (direction === "left") {
-    head.x -= 1;
+    if (tail.x !== TOTAL_COLUMNS - 1) {
+      tail.x += 1;
+    } else if (tail.y === 0) {
+      tail.y += 1;
+    } else {
+      tail.y -= 1;
+    }
   } else if (direction === "up") {
-    head.y -= 1;
+    if (tail.y !== TOTAL_ROWS - 1) {
+      tail.y += 1;
+    } else if (tail.x === 0) {
+      tail.x += 1;
+    } else {
+      tail.x -= 1;
+    }
   } else if (direction === "down") {
-    head.y += 1;
+    if (tail.y !== 0) {
+      tail.y -= 1;
+    } else if (tail.x === 0) {
+      tail.x += 1;
+    } else {
+      tail.x -= 1;
+    }
   }
-  snakeCopy.unshift(head);
+  snakeCopy.push(tail);
   return snakeCopy;
 };
 
@@ -59,6 +82,13 @@ export const gameReducer = (state: BoardState, action: GAME_ACTIONS) => {
     case "ARROW_UP_KEY_PRESSED": {
       const currentDirection = state.direction;
       const newDirection = action.payload.direction;
+
+      if (currentDirection === newDirection) return state;
+      if (currentDirection === "up" && newDirection === "down") return state;
+      if (currentDirection === "down" && newDirection === "up") return state;
+      if (currentDirection === "right" && newDirection === "left") return state;
+      if (currentDirection === "left" && newDirection === "right") return state;
+
       return { ...state, direction: newDirection };
     }
 

@@ -26,12 +26,12 @@ const HeaderRow = ({ currentScore }: HeaderRowProps): JSX.Element => {
             <span className={styles.infoValue}>{currentScore}</span>
           </div>
 
-          {highestScore && (
+          {highestScore ? (
             <div className={styles.scoreWrapper}>
               <span className={styles.infoTitle}> Highest Score: </span>
               <span className={styles.infoValue}>{highestScore}</span>
             </div>
-          )}
+          ) : null}
         </div>
       </div>
     </>

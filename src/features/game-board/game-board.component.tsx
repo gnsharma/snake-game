@@ -12,11 +12,9 @@ import HeaderRow from "./components/header-row";
 
 import * as styles from "./game-board.css";
 
-// TODO: detect body collision
-// TODO: block direction change which results in body collision
 // TODO: link preview generation
 const GameBoard = () => {
-  const [_, setHighestScore] = useLocalStorage<null | number>(
+  const [highestScore, setHighestScore] = useLocalStorage<null | number>(
     "highestScore",
     null
   );
@@ -30,13 +28,22 @@ const GameBoard = () => {
       case "SNAKE_INTERVAL_TICKED":
       case "GENERATE_FOOD": {
         const snakeHead = state.snake[0];
+        const uniqueSnakeCoordinates = new Set(
+          state.snake.map((snakePart) => `${snakePart.x}-${snakePart.y}`)
+        ).size;
+        if (uniqueSnakeCoordinates !== state.snake.length) {
+          state.currentScore > (highestScore ?? 0) &&
+            setHighestScore(state.currentScore);
+          return { type: "GAME_OVER" } as GAME_ACTIONS;
+        }
         if (
           snakeHead.x < 0 ||
           snakeHead.x >= TOTAL_COLUMNS ||
           snakeHead.y < 0 ||
           snakeHead.y >= TOTAL_ROWS
         ) {
-          setHighestScore(state.currentScore);
+          state.currentScore > (highestScore ?? 0) &&
+            setHighestScore(state.currentScore);
           return { type: "GAME_OVER" } as GAME_ACTIONS;
         }
         if (
@@ -69,7 +76,6 @@ const GameBoard = () => {
   const bind = useDrag(
     ({ last, swipe: [swipeX, swipeY], offset: [offsetX, offsetY] }) => {
       if (last) {
-        console.log(swipeX, swipeY, last, offsetX, offsetY);
         let swipeDirection: Direction | null = null;
         const largetOffset = Math.abs(offsetX) >= Math.abs(offsetY) ? "x" : "y";
 
@@ -94,6 +100,16 @@ const GameBoard = () => {
             swipeDirection = "down";
           } else if (swipeY === -1) swipeDirection = "up";
         }
+
+        console.log(
+          swipeX,
+          swipeY,
+          last,
+          offsetX,
+          offsetY,
+          largetOffset,
+          swipeDirection
+        );
 
         if (swipeDirection === "left") {
           dispatch({
@@ -196,7 +212,7 @@ const GameBoard = () => {
                       <div
                         className={clsx(
                           index !== 0 && styles.snake,
-                          index === 0 && styles.snakeHead
+                          index === 0 && styles.snakeHead[direction]
                         )}
                         key={index}
                       />

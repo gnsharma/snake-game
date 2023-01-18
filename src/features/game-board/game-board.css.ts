@@ -1,5 +1,4 @@
-import { style } from "@vanilla-extract/css";
-import { url } from "inspector";
+import { style, styleVariants } from "@vanilla-extract/css";
 import { vars } from "src/styles/themes.css";
 
 export const board = style({
@@ -29,14 +28,25 @@ export const cell = style({
 export const snake = style({
   width: vars.fontSize.lg,
   height: vars.fontSize.lg,
-  backgroundColor: vars.colors.red700,
+  padding: "3px",
+  backgroundClip: "content-box",
+  backgroundColor: vars.colors.green500,
 });
 
-export const snakeHead = style({
-  backgroundColor: vars.colors.red600,
+export const snakeHeadBase = style({
   width: vars.fontSize.lg,
   height: vars.fontSize.lg,
-  // backgroundImage: "url('src/assets/icons/snake-head.svg?raw')",
+  backgroundImage: "url('src/assets/icons/snake-head.svg')",
+  backgroundSize: "contain",
+  backgroundRepeat: "no-repeat",
+  transition: "100ms linear all",
+});
+
+export const snakeHead = styleVariants({
+  right: [snakeHeadBase, { transform: "rotate(-90deg)" }],
+  left: [snakeHeadBase, { transform: "rotate(90deg)" }],
+  up: [snakeHeadBase, { transform: "rotate(-180deg)" }],
+  down: [snakeHeadBase, { transform: "rotate(0deg)" }],
 });
 
 export const food = style({
