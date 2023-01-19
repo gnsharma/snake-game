@@ -23,7 +23,6 @@ const boardBase = style({
   gridAutoFlow: "column",
   boxShadow: vars.boxShadow.md,
   width: "min-content",
-  backgroundColor: vars.color.background.accentPrimary,
   borderRadius: vars.border.radius.sm,
 });
 export const board = styleVariants({
@@ -35,23 +34,70 @@ export const row = style({
   display: "flex",
 });
 
-export const cell = style({
+const cellBase = style({
   width: vars.spacing.md,
   height: vars.spacing.md,
-  borderWidth: "0.25px",
-  borderStyle: "dotted",
-  borderColor: vars.color.border.primary,
-});
-
-export const snake = style({
-  width: vars.spacing.md,
-  height: vars.spacing.md,
-  padding: "3px",
-  backgroundClip: "content-box",
   backgroundColor: vars.color.background.secondary,
 });
 
-export const snakeHeadBase = style({
+export const cell = styleVariants({
+  even: [cellBase, { filter: "brightness(1)" }],
+  odd: [cellBase, { filter: "brightness(1.2)" }],
+});
+
+const snakeBase = style({
+  width: vars.spacing.md,
+  height: vars.spacing.md,
+  padding: "2px",
+  backgroundClip: "content-box",
+  backgroundColor: vars.color.background.accentPrimary,
+});
+export const snake = styleVariants({
+  even: [snakeBase, { filter: "contrast(10)" }],
+  odd: [snakeBase, { filter: "contrast(10)" }],
+});
+
+const snakeSecondPartBase = style({});
+export const snakeSecondPart = styleVariants({
+  down: [
+    snakeSecondPartBase,
+    // { borderBottomLeftRadius: "50%", borderBottomRightRadius: "50%" },
+  ],
+  up: [
+    snakeSecondPartBase,
+    // { borderTopLeftRadius: "50%", borderTopRightRadius: "50%" },
+  ],
+  left: [
+    snakeSecondPartBase,
+    // { borderBottomLeftRadius: "50%", borderTopLeftRadius: "50%" },
+  ],
+  right: [
+    snakeSecondPartBase,
+    // { borderTopRightRadius: "50%", borderBottomRightRadius: "50%" },
+  ],
+});
+
+const snakeTailBase = style({});
+export const snakeTail = styleVariants({
+  up: [
+    snakeTailBase,
+    // { borderBottomLeftRadius: "50%", borderBottomRightRadius: "50%" },
+  ],
+  down: [
+    snakeTailBase,
+    // { borderTopLeftRadius: "50%", borderTopRightRadius: "50%" },
+  ],
+  right: [
+    snakeTailBase,
+    // { borderBottomLeftRadius: "50%", borderTopLeftRadius: "50%" },
+  ],
+  left: [
+    snakeTailBase,
+    // { borderTopRightRadius: "50%", borderBottomRightRadius: "50%" },
+  ],
+});
+
+const snakeHeadBase = style({
   width: vars.spacing.md,
   height: vars.spacing.md,
   backgroundImage: "url('src/assets/icons/snake-head.svg')",
@@ -70,15 +116,5 @@ export const snakeHead = styleVariants({
 export const food = style({
   width: vars.spacing.md,
   height: vars.spacing.md,
-});
-
-export const playAgain = style({
-  fontWeight: "bold",
-  fontSize: vars.text.xl,
-  boxShadow: vars.boxShadow.lg,
-  borderRadius: vars.border.radius.sm,
-  border: "none",
-  padding: vars.spacing.sm,
-  backgroundColor: vars.color.background.primary,
-  color: vars.color.text.primary,
+  filter: "contrast(1.5)",
 });

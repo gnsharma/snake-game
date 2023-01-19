@@ -7,9 +7,9 @@ import { colors } from "../tokens";
 export const redThemeClass = createTheme(vars, {
   color: {
     background: {
-      primary: colors.red200,
-      secondary: colors.red300,
-      accentPrimary: colors.red800,
+      primary: colors.red300,
+      secondary: colors.red800,
+      accentPrimary: colors.red200,
       focus: colors.red600,
       dim: colors.red700,
     },

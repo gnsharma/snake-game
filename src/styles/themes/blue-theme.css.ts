@@ -8,8 +8,8 @@ export const blueThemeClass = createTheme(vars, {
   color: {
     background: {
       primary: colors.blue200,
-      secondary: colors.blue300,
-      accentPrimary: colors.blue800,
+      secondary: colors.blue800,
+      accentPrimary: colors.blue400,
       focus: colors.blue600,
       dim: colors.blue700,
     },

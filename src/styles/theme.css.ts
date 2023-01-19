@@ -85,9 +85,9 @@ export const button = styleVariants({
   primary: [
     buttonBase,
     {
-      background: vars.color.background.secondary,
+      background: vars.color.background.accentPrimary,
       border: vars.border.solid,
-      borderColor: vars.color.background.secondary,
+      borderColor: vars.color.background.accentPrimary,
       color: vars.color.text.secondary,
       fontWeight: 600,
 

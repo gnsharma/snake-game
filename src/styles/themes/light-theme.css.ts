@@ -8,8 +8,8 @@ export const lightThemeClass = createTheme(vars, {
   color: {
     background: {
       primary: colors.white,
-      secondary: colors.black,
-      accentPrimary: colors.gray300,
+      secondary: colors.gray300,
+      accentPrimary: colors.black,
       focus: colors.gray50,
       dim: "#f1f1f1",
     },

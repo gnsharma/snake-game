@@ -91,7 +91,7 @@ const GameBoard = () => {
     currentScore < 50 ? 500 : Math.max(50, 500 / (currentScore / 50));
   const snakeInterval = useInterval(() => {
     dispatch({ type: "SNAKE_INTERVAL_TICKED" });
-    console.count("snakeInterval");
+    // console.count("snakeInterval");
   }, snakeIntervalDuration);
 
   const foodInterval = useInterval(() => {
@@ -183,13 +183,22 @@ const GameBoard = () => {
         {BOARD.map((row, rIndex) => (
           <div className={styles.row} key={rIndex}>
             {row.map((_, cIndex) => (
-              <div className={styles.cell} key={cIndex}>
+              <div
+                className={styles.cell[(cIndex + rIndex) % 2 ? "even" : "odd"]}
+                key={cIndex}
+              >
                 {snake.map((segment, index) => {
                   if (segment.x === cIndex && segment.y === rIndex) {
                     return (
                       <div
                         className={clsx(
-                          index !== 0 && styles.snake,
+                          index !== 0 &&
+                            styles.snake[
+                              (cIndex + rIndex) % 2 ? "even" : "odd"
+                            ],
+                          index === 1 && styles.snakeSecondPart[direction],
+                          index === snake.length - 1 &&
+                            styles.snakeTail[direction],
                           index === 0 && styles.snakeHead[direction]
                         )}
                         key={index}

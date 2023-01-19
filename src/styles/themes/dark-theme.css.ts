@@ -8,8 +8,8 @@ export const darkThemeClass = createTheme(vars, {
   color: {
     background: {
       primary: colors.black,
-      secondary: colors.white,
-      accentPrimary: colors.gray800,
+      secondary: colors.gray700,
+      accentPrimary: colors.white,
       focus: "#0C0C0E",
       dim: "#0A0A0B",
     },

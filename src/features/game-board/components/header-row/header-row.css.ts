@@ -8,7 +8,7 @@ export const info = style({
   alignItems: "center",
   justifyContent: "center",
   boxShadow: vars.boxShadow.md,
-  padding: vars.spacing.xs,
+  padding: vars.text.sm,
   color: vars.color.text.primary,
   borderRadius: vars.border.radius.sm,
 });
