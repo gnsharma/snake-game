@@ -4,6 +4,7 @@ type Coordinate = { x: number; y: number };
 
 type Snake = Array<Coordinate>;
 
+type GameOverReason = "wall" | "self";
 type BoardState = {
   foodCoordinates: { x: null | number; y: null | number };
   hasFoodBeenCollected: boolean;
@@ -14,6 +15,7 @@ type BoardState = {
   isGameOver: boolean;
   foodEmoji: string | null;
   hasGameBeenReset: boolean;
+  gameOverReason: GameOverReason | null;
 };
 type GAME_ACTIONS =
   | {
@@ -28,4 +30,4 @@ type GAME_ACTIONS =
   | { type: "TIME_INTERVAL_TICKED" }
   | { type: "FOOD_COLLECTED" }
   | { type: "RESET_BOARD" }
-  | { type: "GAME_OVER" };
+  | { type: "GAME_OVER"; payload: { reason: GameOverReason } };

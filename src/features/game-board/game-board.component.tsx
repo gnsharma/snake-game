@@ -40,7 +40,10 @@ const GameBoard = () => {
         if (uniqueSnakeCoordinates !== state.snake.length) {
           state.currentScore > (highestScore ?? 0) &&
             setHighestScore(state.currentScore);
-          return { type: "GAME_OVER" } as GAME_ACTIONS;
+          return {
+            type: "GAME_OVER",
+            payload: { reason: "self" },
+          } as GAME_ACTIONS;
         }
         if (
           snakeHead.x < 0 ||
@@ -50,7 +53,10 @@ const GameBoard = () => {
         ) {
           state.currentScore > (highestScore ?? 0) &&
             setHighestScore(state.currentScore);
-          return { type: "GAME_OVER" } as GAME_ACTIONS;
+          return {
+            type: "GAME_OVER",
+            payload: { reason: "wall" },
+          } as GAME_ACTIONS;
         }
         if (
           snakeHead.x === state.foodCoordinates.x &&
@@ -72,6 +78,7 @@ const GameBoard = () => {
       isGameOver,
       foodEmoji,
       hasGameBeenReset,
+      gameOverReason,
     },
     dispatch,
   ] = useReducerWithSideEffects(
@@ -153,7 +160,11 @@ const GameBoard = () => {
       <HeaderRow currentScore={currentScore} />
       {isGameOver ? (
         <button onClick={onPlayAgainClick} className={theme.button.primary}>
-          Play Again
+          {`Oops, ${
+            gameOverReason === "wall"
+              ? "you hit the wall."
+              : "you ate yourself."
+          } Play Again?`}
         </button>
       ) : !hasGameBeenReset && currentScore === 0 && elapsedTime === 0 ? (
         <button onClick={startGame} className={theme.button.primary}>
@@ -171,7 +182,7 @@ const GameBoard = () => {
       >
         {BOARD.map((row, rIndex) => (
           <div className={styles.row} key={rIndex}>
-            {row.map((col, cIndex) => (
+            {row.map((_, cIndex) => (
               <div className={styles.cell} key={cIndex}>
                 {snake.map((segment, index) => {
                   if (segment.x === cIndex && segment.y === rIndex) {

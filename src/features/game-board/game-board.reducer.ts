@@ -77,6 +77,7 @@ export const initialBoardState: BoardState = {
   isGameOver: false,
   foodEmoji: null,
   hasGameBeenReset: false,
+  gameOverReason: null,
 };
 
 export const createGameReducer =
@@ -147,7 +148,11 @@ export const createGameReducer =
       }
 
       case "GAME_OVER": {
-        return { ...state, isGameOver: true };
+        return {
+          ...state,
+          isGameOver: true,
+          gameOverReason: action.payload.reason,
+        };
       }
 
       default: {
