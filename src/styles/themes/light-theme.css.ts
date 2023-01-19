@@ -1,8 +1,8 @@
 import { createTheme } from "@vanilla-extract/css";
 
-import { vars } from "./contract.css";
-import { commonVars } from "./common-theme-vars";
-import { colors } from "./tokens";
+import { vars } from "../contract.css";
+import { commonVars } from "../common-theme-vars";
+import { colors } from "../tokens";
 
 export const lightThemeClass = createTheme(vars, {
   color: {

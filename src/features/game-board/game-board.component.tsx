@@ -88,10 +88,10 @@ const GameBoard = () => {
   );
 
   const snakeIntervalDuration =
-    currentScore < 50 ? 500 : Math.max(150, 500 / (currentScore / 50));
+    currentScore < 50 ? 500 : Math.max(50, 500 / (currentScore / 50));
   const snakeInterval = useInterval(() => {
     dispatch({ type: "SNAKE_INTERVAL_TICKED" });
-    // console.count("snakeInterval");
+    console.count("snakeInterval");
   }, snakeIntervalDuration);
 
   const foodInterval = useInterval(() => {

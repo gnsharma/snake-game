@@ -1,9 +1,12 @@
 import GameBoard from "src/features/game-board";
 import clsx from "clsx";
-import { useDarkMode, useMediaQuery } from "usehooks-ts";
+import { useDarkMode, useMediaQuery, useLocalStorage } from "usehooks-ts";
 
-import { lightThemeClass } from "src/styles/light-theme.css";
-import { darkThemeClass } from "src/styles/dark-theme.css";
+import { lightThemeClass } from "src/styles/themes/light-theme.css";
+import { darkThemeClass } from "src/styles/themes/dark-theme.css";
+import { greenThemeClass } from "src/styles/themes/green-theme.css";
+import { blueThemeClass } from "src/styles/themes/blue-theme.css";
+import { redThemeClass } from "src/styles/themes/red-theme.css";
 
 import * as theme from "src/styles/theme.css";
 import * as styles from "./app.css";
@@ -12,17 +15,29 @@ import LinkedinLogo from "src/assets/logos/linkedin.png";
 import GithubLogo from "src/assets/logos/github.svg";
 import GithubLogoWhite from "src/assets/logos/github-white.svg";
 
+const themeToThemeClassMapping: Record<ThemeOptions, string> = {
+  dark: darkThemeClass,
+  light: lightThemeClass,
+  red: redThemeClass,
+  green: greenThemeClass,
+  blue: blueThemeClass,
+};
+
 function App() {
   const { isDarkMode } = useDarkMode();
+  const [selectedTheme] = useLocalStorage<ThemeOptions>(
+    "selectedTheme",
+    isDarkMode ? "dark" : "light"
+  );
+
   const smallScreen = useMediaQuery("(max-height: 700px)");
   const mediumScreen = useMediaQuery("(min-height: 700px)");
-
   const screenSize = smallScreen ? "small" : mediumScreen ? "medium" : "large";
 
   return (
     <div
       className={clsx(
-        isDarkMode ? darkThemeClass : lightThemeClass,
+        themeToThemeClassMapping[selectedTheme],
         styles.app[screenSize],
         theme.width.full
       )}
@@ -34,7 +49,9 @@ function App() {
       <div className={styles.footer}>
         <a href="https://github.com/gnsharma/snake-game" target="_blank">
           <img
-            src={isDarkMode ? GithubLogoWhite : GithubLogo}
+            src={
+              ["dark"].includes(selectedTheme) ? GithubLogoWhite : GithubLogo
+            }
             className={styles.logo}
             alt="GitHub Logo"
           />

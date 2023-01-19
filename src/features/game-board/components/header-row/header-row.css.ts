@@ -38,7 +38,9 @@ export const infoValue = style({
   fontSize: vars.text.lg,
 });
 
-export const darkModeToggle = style({
+export const themeSelector = style({
+  width: vars.spacing.sm,
+  height: vars.spacing.sm,
   color: vars.color.text.primary,
   cursor: "pointer",
 });
