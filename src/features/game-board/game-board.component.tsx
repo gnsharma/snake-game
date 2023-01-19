@@ -6,7 +6,7 @@ import { useDrag } from "@use-gesture/react";
 import { useInterval, useReducerWithSideEffects } from "src/common/hooks";
 
 import { TOTAL_COLUMNS, TOTAL_ROWS } from "./game-board.constants";
-import { gameReducer, initialBoardState } from "./game-board.reducer";
+import { createGameReducer, initialBoardState } from "./game-board.reducer";
 import {
   detectSwipeDirection,
   dispatchArrowKeyEvent,
@@ -23,6 +23,7 @@ const GameBoard = () => {
     null
   );
   const smallScreen = useMediaQuery("(max-height: 700px)");
+  const totalRows = smallScreen ? TOTAL_ROWS - 5 : TOTAL_ROWS;
 
   const gameReducerSideEffects = (state: BoardState, action: GAME_ACTIONS) => {
     switch (action.type) {
@@ -45,7 +46,7 @@ const GameBoard = () => {
           snakeHead.x < 0 ||
           snakeHead.x >= TOTAL_COLUMNS ||
           snakeHead.y < 0 ||
-          snakeHead.y >= TOTAL_ROWS
+          snakeHead.y >= totalRows
         ) {
           state.currentScore > (highestScore ?? 0) &&
             setHighestScore(state.currentScore);
@@ -74,7 +75,7 @@ const GameBoard = () => {
     },
     dispatch,
   ] = useReducerWithSideEffects(
-    gameReducer,
+    createGameReducer(totalRows),
     gameReducerSideEffects,
     initialBoardState
   );
@@ -83,7 +84,7 @@ const GameBoard = () => {
     currentScore < 50 ? 500 : Math.max(150, 500 / (currentScore / 50));
   const snakeInterval = useInterval(() => {
     dispatch({ type: "SNAKE_INTERVAL_TICKED" });
-    console.count("snakeInterval");
+    // console.count("snakeInterval");
   }, snakeIntervalDuration);
 
   const foodInterval = useInterval(() => {
@@ -113,6 +114,7 @@ const GameBoard = () => {
           swipeY,
           offsetX,
           offsetY,
+          currentDirection: direction,
         });
         swipeDirection && dispatchArrowKeyEvent(swipeDirection, dispatch);
       }
@@ -144,9 +146,7 @@ const GameBoard = () => {
     timeInterval.set();
   }, []);
 
-  const BOARD: number[][] = Array(
-    smallScreen ? TOTAL_ROWS - 5 : TOTAL_ROWS
-  ).fill(Array(TOTAL_COLUMNS).fill(0));
+  const BOARD: number[][] = Array(totalRows).fill(Array(TOTAL_COLUMNS).fill(0));
 
   return (
     <div className={styles.gameContainer[smallScreen ? "small" : "large"]}>
