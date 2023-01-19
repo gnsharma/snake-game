@@ -19,18 +19,6 @@ export const detectSwipeDirection = ({
     | null = null;
   const largetOffset = Math.abs(offsetX) >= Math.abs(offsetY) ? "x" : "y";
 
-  const abc = () => {
-    if (largetOffset === "x") {
-      swipeDirection = ["left", "right"].includes(currentDirection)
-        ? "ArrowDown"
-        : "ArrowRight";
-    } else {
-      swipeDirection = ["up", "down"].includes(currentDirection)
-        ? "ArrowRight"
-        : "ArrowDown";
-    }
-  };
-
   if (swipeX === 1) {
     if (swipeY === 0) {
       swipeDirection = "ArrowRight";
@@ -66,7 +54,7 @@ export const detectSwipeDirection = ({
       } else {
         swipeDirection = ["up", "down"].includes(currentDirection)
           ? "ArrowLeft"
-          : "ArrowUp";
+          : "ArrowDown";
       }
     } else if (swipeY === -1) {
       if (largetOffset === "x") {
@@ -85,7 +73,7 @@ export const detectSwipeDirection = ({
     } else if (swipeY === -1) swipeDirection = "ArrowUp";
   }
 
-  // console.log(swipeX, swipeY, offsetX, offsetY, largetOffset, swipeDirection);
+  console.log(swipeX, swipeY, offsetX, offsetY, largetOffset, swipeDirection);
   return swipeDirection;
 };
 
