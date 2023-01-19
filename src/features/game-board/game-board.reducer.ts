@@ -72,6 +72,7 @@ export const initialBoardState: BoardState = {
   elapsedTime: 0,
   isGameOver: false,
   foodEmoji: null,
+  hasGameBeenReset: false,
 };
 
 export const gameReducer = (state: BoardState, action: GAME_ACTIONS) => {
@@ -133,7 +134,7 @@ export const gameReducer = (state: BoardState, action: GAME_ACTIONS) => {
     }
 
     case "RESET_BOARD": {
-      return { ...initialBoardState };
+      return { ...initialBoardState, hasGameBeenReset: true };
     }
 
     case "GAME_OVER": {

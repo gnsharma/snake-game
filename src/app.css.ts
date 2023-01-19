@@ -1,27 +1,36 @@
-import { style } from "@vanilla-extract/css";
-import { vars } from "src/styles/themes.css";
+import { style, styleVariants } from "@vanilla-extract/css";
+import { vars } from "src/styles/contract.css";
 
-export const app = style({
+const appBase = style({
+  height: "100%",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "start",
-  gap: vars.space.md,
-  padding: vars.space.lg,
-  backgroundColor: vars.colors.background,
-  width: "100%",
-  height: "100%",
-  color: vars.colors.primary,
+  gap: vars.spacing.sm,
+  padding: vars.spacing.lg,
+  backgroundColor: vars.color.background.primary,
+  color: vars.color.text.primary,
+});
+export const app = styleVariants({
+  small: [appBase, { paddingTop: vars.spacing.xxs }],
+  medium: [appBase, {}],
+  large: [appBase, {}],
+});
+
+export const info = styleVariants({
+  small: { fontSize: vars.text.sm },
+  medium: {},
+  large: {},
 });
 
 export const footer = style({
   display: "flex",
-  gap: vars.space.md,
-  padding: vars.space.xs,
+  gap: vars.spacing.sm,
   marginTop: "auto",
 });
 
 export const logo = style({
-  width: vars.space.lg,
-  height: vars.space.lg,
+  width: vars.spacing.gd,
+  height: vars.spacing.gd,
 });

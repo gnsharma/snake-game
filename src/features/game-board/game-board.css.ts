@@ -1,16 +1,34 @@
 import { style, styleVariants } from "@vanilla-extract/css";
-import { vars } from "src/styles/themes.css";
+import { vars } from "src/styles/contract.css";
+import { TOTAL_COLUMNS, TOTAL_ROWS } from "./game-board.constants";
 
-export const board = style({
+const gameContainerBase = style({
+  display: "flex",
+  alignItems: "center",
+  gap: vars.spacing.sm,
+});
+export const gameContainer = styleVariants({
+  small: [
+    gameContainerBase,
+    { flexDirection: "column-reverse", gap: vars.spacing.xs },
+  ],
+  large: [gameContainerBase, { flexDirection: "column" }],
+});
+
+const boardBase = style({
   touchAction: "none",
   display: "grid",
-  gridTemplateColumns: "repeat(20, 1fr)",
-  gridTemplateRows: "repeat(30, 1fr)",
+  gridTemplateColumns: `repeat(${TOTAL_COLUMNS}, 1fr)`,
+  gridTemplateRows: `repeat(${TOTAL_ROWS}, 1fr)`,
   gridAutoFlow: "column",
   boxShadow: vars.boxShadow.md,
   width: "min-content",
-  backgroundColor: vars.colors.primary,
-  borderRadius: vars.radii.sm,
+  backgroundColor: vars.color.background.accentPrimary,
+  borderRadius: vars.border.radius.sm,
+});
+export const board = styleVariants({
+  small: [boardBase, { gridTemplateRows: `repeat(${TOTAL_ROWS - 5}, 1fr)` }],
+  large: [boardBase, {}],
 });
 
 export const row = style({
@@ -18,24 +36,24 @@ export const row = style({
 });
 
 export const cell = style({
-  width: vars.fontSize.lg,
-  height: vars.fontSize.lg,
+  width: vars.spacing.md,
+  height: vars.spacing.md,
   borderWidth: "0.25px",
   borderStyle: "dotted",
-  borderColor: vars.colors.border,
+  borderColor: vars.color.border.primary,
 });
 
 export const snake = style({
-  width: vars.fontSize.lg,
-  height: vars.fontSize.lg,
+  width: vars.spacing.md,
+  height: vars.spacing.md,
   padding: "3px",
   backgroundClip: "content-box",
-  backgroundColor: vars.colors.green500,
+  backgroundColor: vars.color.background.secondary,
 });
 
 export const snakeHeadBase = style({
-  width: vars.fontSize.lg,
-  height: vars.fontSize.lg,
+  width: vars.spacing.md,
+  height: vars.spacing.md,
   backgroundImage: "url('src/assets/icons/snake-head.svg')",
   backgroundSize: "contain",
   backgroundRepeat: "no-repeat",
@@ -50,17 +68,17 @@ export const snakeHead = styleVariants({
 });
 
 export const food = style({
-  width: vars.fontSize.lg,
-  height: vars.fontSize.lg,
+  width: vars.spacing.md,
+  height: vars.spacing.md,
 });
 
 export const playAgain = style({
   fontWeight: "bold",
-  fontSize: vars.fontSize.xl,
+  fontSize: vars.text.xl,
   boxShadow: vars.boxShadow.lg,
-  borderRadius: vars.radii.sm,
+  borderRadius: vars.border.radius.sm,
   border: "none",
-  padding: vars.space.sm,
-  backgroundColor: vars.colors.background,
-  color: vars.colors.primary,
+  padding: vars.spacing.sm,
+  backgroundColor: vars.color.background.primary,
+  color: vars.color.text.primary,
 });

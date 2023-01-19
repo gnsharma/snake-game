@@ -13,6 +13,7 @@ type BoardState = {
   direction: Direction;
   isGameOver: boolean;
   foodEmoji: string | null;
+  hasGameBeenReset: boolean;
 };
 type GAME_ACTIONS =
   | {

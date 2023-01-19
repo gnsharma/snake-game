@@ -1,56 +1,44 @@
 import { style } from "@vanilla-extract/css";
-import { vars } from "src/styles/themes.css";
+import { vars } from "src/styles/contract.css";
 
 export const info = style({
   display: "flex",
-  gap: vars.space.md,
+  gap: vars.spacing.md,
   flexWrap: "wrap",
   alignItems: "center",
   justifyContent: "center",
   boxShadow: vars.boxShadow.md,
-  padding: vars.space.md,
-  color: vars.colors.primary,
-  borderRadius: vars.radii.sm,
+  padding: vars.spacing.xs,
+  color: vars.color.text.primary,
+  borderRadius: vars.border.radius.sm,
 });
 
 export const infoWrapper = style({
   display: "flex",
   flexWrap: "wrap",
-  gap: vars.space.md,
+  gap: vars.spacing.sm,
   alignItems: "center",
   justifyContent: "center",
 });
 
 export const scoreWrapper = style({
   display: "flex",
-  gap: vars.space.sm,
+  gap: vars.spacing.xs,
   alignItems: "center",
   justifyContent: "center",
 });
 
 export const infoTitle = style({
   fontWeight: "bold",
-  fontSize: vars.fontSize.md,
+  fontSize: vars.text.md,
 });
 
 export const infoValue = style({
   fontWeight: "bold",
-  fontSize: vars.fontSize.lg,
+  fontSize: vars.text.lg,
 });
 
 export const darkModeToggle = style({
-  color: vars.colors.primary,
+  color: vars.color.text.primary,
+  cursor: "pointer",
 });
-
-export const playAgain = style([
-  infoValue,
-  {
-    fontSize: vars.fontSize.xl,
-    boxShadow: vars.boxShadow.lg,
-    borderRadius: vars.radii.sm,
-    border: "none",
-    padding: vars.space.sm,
-    backgroundColor: vars.colors.background,
-    color: vars.colors.primary,
-  },
-]);

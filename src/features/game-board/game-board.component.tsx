@@ -1,23 +1,28 @@
 import * as React from "react";
 import clsx from "clsx";
-import { useLocalStorage } from "usehooks-ts";
+import { useLocalStorage, useMediaQuery } from "usehooks-ts";
 import { useDrag } from "@use-gesture/react";
 
 import { useInterval, useReducerWithSideEffects } from "src/common/hooks";
 
-import { TOTAL_COLUMNS, TOTAL_ROWS, BOARD } from "./game-board.constants";
+import { TOTAL_COLUMNS, TOTAL_ROWS } from "./game-board.constants";
 import { gameReducer, initialBoardState } from "./game-board.reducer";
+import {
+  detectSwipeDirection,
+  dispatchArrowKeyEvent,
+} from "./game-board.helpers";
 
 import HeaderRow from "./components/header-row";
 
+import * as theme from "src/styles/theme.css";
 import * as styles from "./game-board.css";
 
-// TODO: link preview generation
 const GameBoard = () => {
   const [highestScore, setHighestScore] = useLocalStorage<null | number>(
     "highestScore",
     null
   );
+  const smallScreen = useMediaQuery("(max-height: 700px)");
 
   const gameReducerSideEffects = (state: BoardState, action: GAME_ACTIONS) => {
     switch (action.type) {
@@ -65,6 +70,7 @@ const GameBoard = () => {
       elapsedTime,
       isGameOver,
       foodEmoji,
+      hasGameBeenReset,
     },
     dispatch,
   ] = useReducerWithSideEffects(
@@ -73,78 +79,17 @@ const GameBoard = () => {
     initialBoardState
   );
 
-  const bind = useDrag(
-    ({ last, swipe: [swipeX, swipeY], offset: [offsetX, offsetY] }) => {
-      if (last) {
-        let swipeDirection: Direction | null = null;
-        const largetOffset = Math.abs(offsetX) >= Math.abs(offsetY) ? "x" : "y";
-
-        if (swipeX === 1) {
-          if (swipeY === 0) {
-            swipeDirection = "right";
-          } else if (swipeY === 1) {
-            swipeDirection = largetOffset === "x" ? "right" : "down";
-          } else if (swipeY === -1) {
-            swipeDirection = largetOffset === "x" ? "right" : "up";
-          }
-        } else if (swipeX === -1) {
-          if (swipeY === 0) {
-            swipeDirection = "left";
-          } else if (swipeY === 1) {
-            swipeDirection = largetOffset === "x" ? "left" : "down";
-          } else if (swipeY === -1) {
-            swipeDirection = largetOffset === "x" ? "left" : "up";
-          }
-        } else if (swipeX === 0) {
-          if (swipeY === 1) {
-            swipeDirection = "down";
-          } else if (swipeY === -1) swipeDirection = "up";
-        }
-
-        console.log(
-          swipeX,
-          swipeY,
-          last,
-          offsetX,
-          offsetY,
-          largetOffset,
-          swipeDirection
-        );
-
-        if (swipeDirection === "left") {
-          dispatch({
-            type: "ARROW_LEFT_KEY_PRESSED",
-            payload: { direction: "left" },
-          });
-        } else if (swipeDirection === "up") {
-          dispatch({
-            type: "ARROW_UP_KEY_PRESSED",
-            payload: { direction: "up" },
-          });
-        } else if (swipeDirection === "right") {
-          dispatch({
-            type: "ARROW_RIGHT_KEY_PRESSED",
-            payload: { direction: "right" },
-          });
-        } else if (swipeDirection === "down") {
-          dispatch({
-            type: "ARROW_DOWN_KEY_PRESSED",
-            payload: { direction: "down" },
-          });
-        }
-      }
-    },
-    { swipe: { duration: 1000, distance: [0, 0], velocity: [0, 0] } }
-  );
-
   const snakeIntervalDuration =
     currentScore < 50 ? 500 : Math.max(150, 500 / (currentScore / 50));
   const snakeInterval = useInterval(() => {
     dispatch({ type: "SNAKE_INTERVAL_TICKED" });
+    console.count("snakeInterval");
   }, snakeIntervalDuration);
+
   const foodInterval = useInterval(() => {
     dispatch({ type: "GENERATE_FOOD" });
   }, 3000);
+
   const timeInterval = useInterval(() => {
     dispatch({ type: "TIME_INTERVAL_TICKED" });
     if (elapsedTime === 50 && !hasFoodBeenCollected) {
@@ -153,55 +98,77 @@ const GameBoard = () => {
   }, 1000);
 
   React.useEffect(() => {
-    if (!isGameOver) {
-      snakeInterval.set();
-      foodInterval.set();
-      timeInterval.set();
-    }
-    return () => {
-      snakeInterval.clear();
-      foodInterval.clear();
-      timeInterval.clear();
-    };
-  }, [isGameOver]);
-
-  React.useEffect(() => {
     const handleKeyPress = (event: KeyboardEvent) => {
-      if (event.code === "ArrowLeft") {
-        dispatch({
-          type: "ARROW_LEFT_KEY_PRESSED",
-          payload: { direction: "left" },
-        });
-      } else if (event.code === "ArrowUp") {
-        dispatch({
-          type: "ARROW_UP_KEY_PRESSED",
-          payload: { direction: "up" },
-        });
-      } else if (event.code === "ArrowRight") {
-        dispatch({
-          type: "ARROW_RIGHT_KEY_PRESSED",
-          payload: { direction: "right" },
-        });
-      } else if (event.code === "ArrowDown") {
-        dispatch({
-          type: "ARROW_DOWN_KEY_PRESSED",
-          payload: { direction: "down" },
-        });
-      }
+      dispatchArrowKeyEvent(event.code, dispatch);
     };
-
     document.addEventListener("keydown", handleKeyPress);
     return () => document.removeEventListener("keydown", handleKeyPress);
   }, [snake]);
 
-  const onPlayAgainClick = () => {
+  const bind = useDrag(
+    ({ last, swipe: [swipeX, swipeY], offset: [offsetX, offsetY] }) => {
+      if (last) {
+        const swipeDirection = detectSwipeDirection({
+          swipeX,
+          swipeY,
+          offsetX,
+          offsetY,
+        });
+        swipeDirection && dispatchArrowKeyEvent(swipeDirection, dispatch);
+      }
+    },
+    { swipe: { duration: 1000, distance: [0, 0], velocity: [0, 0] } }
+  );
+
+  React.useEffect(() => {
+    const clearIntervals = () => {
+      snakeInterval.clear();
+      foodInterval.clear();
+      timeInterval.clear();
+    };
+    if (isGameOver) {
+      clearIntervals();
+    }
+  }, [isGameOver]);
+
+  const onPlayAgainClick = React.useCallback(() => {
     dispatch({ type: "RESET_BOARD" });
-  };
+    snakeInterval.set();
+    foodInterval.set();
+    timeInterval.set();
+  }, []);
+
+  const startGame = React.useCallback(() => {
+    snakeInterval.set();
+    foodInterval.set();
+    timeInterval.set();
+  }, []);
+
+  const BOARD: number[][] = Array(
+    smallScreen ? TOTAL_ROWS - 5 : TOTAL_ROWS
+  ).fill(Array(TOTAL_COLUMNS).fill(0));
 
   return (
-    <>
+    <div className={styles.gameContainer[smallScreen ? "small" : "large"]}>
       <HeaderRow currentScore={currentScore} />
-      <div className={styles.board} {...bind()}>
+      {isGameOver ? (
+        <button onClick={onPlayAgainClick} className={theme.button.primary}>
+          Play Again
+        </button>
+      ) : !hasGameBeenReset && currentScore === 0 && elapsedTime === 0 ? (
+        <button onClick={startGame} className={theme.button.primary}>
+          Start Game
+        </button>
+      ) : (
+        <button className={theme.button.primary}>
+          {elapsedTime > 3 ? "You are doing great" : "Keep going"}
+        </button>
+      )}
+
+      <div
+        className={styles.board[smallScreen ? "small" : "large"]}
+        {...bind()}
+      >
         {BOARD.map((row, rIndex) => (
           <div className={styles.row} key={rIndex}>
             {row.map((col, cIndex) => (
@@ -228,12 +195,7 @@ const GameBoard = () => {
           </div>
         ))}
       </div>
-      {isGameOver && (
-        <button onClick={onPlayAgainClick} className={styles.playAgain}>
-          Play Again
-        </button>
-      )}
-    </>
+    </div>
   );
 };
 

@@ -1,1 +1,3 @@
-export { default as GameBoard } from "./game-board.component";
+import GameBoard from "./game-board.component";
+
+export default GameBoard;
